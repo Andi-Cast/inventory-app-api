@@ -22,9 +22,17 @@ public class ProductService {
     }
 
     public Product addProduct(Product product) {
-        product.setCreatedDate(new Date());
-        product.setLastUpdated(new Date());
-        return productRepository.save(product);
+        Product newProduct = new Product(
+                product.getCreatedBy(),
+                product.getProductNumber(),
+                product.getName(),
+                product.getCategory(),
+                new Date(),
+                new Date(),
+                product.getExpirationDate()
+        );
+
+        return productRepository.save(newProduct);
     }
 
     public Product updateProduct(String id, Product productDetails) {
