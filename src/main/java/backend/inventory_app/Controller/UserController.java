@@ -18,11 +18,6 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return userService.addUser(user);
-    }
-
     @PutMapping("/update/{id}")
     public User update(@PathVariable String id, @RequestBody User user) {
         return userService.updateUser(id, user);
