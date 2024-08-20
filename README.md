@@ -2,16 +2,6 @@
 
 This project is a backend API for managing inventory products. It provides endpoints for user authentication, product management, and role-based access control. The API is designed using Spring Boot and MongoDB.
 
-## Table of Contents
-- [Project Overview](#project-overview)
-- [Technologies Used](#technologies-used)
-- [Installation & Setup](#installation--setup)
-- [API Endpoints](#api-endpoints)
-- [Features](#features)
-- [Future Enhancements](#future-enhancements)
-- [Contributing](#contributing)
-- [License](#license)
-
 ## Project Overview
 
 The Inventory Management API allows users to perform CRUD operations on products and manage user roles. The API supports JWT-based authentication and role-based access control, ensuring that only authorized users can access certain endpoints.
