@@ -13,7 +13,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/all_users")
+    @GetMapping("/getUsers")
     public List<User> getUsers() {
         return userService.getUsers();
     }

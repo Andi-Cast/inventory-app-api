@@ -4,12 +4,12 @@ import backend.inventory_app.Model.AuthenticationResponse;
 import backend.inventory_app.Model.User;
 import backend.inventory_app.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -21,6 +21,9 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(User request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new DataIntegrityViolationException("Username already exists.");
+        }
         User user = new User(
                 request.getFirstname(),
                 request.getLastname(),
@@ -31,7 +34,14 @@ public class AuthenticationService {
 
         String token = jwtService.generateToken(user);
 
-        return new AuthenticationResponse(token);
+        return new AuthenticationResponse(
+                token,
+                user.getId(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getUsername(),
+                user.getRole().toString()
+        );
     }
 
     public AuthenticationResponse authenticate(User request) {
@@ -41,8 +51,16 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException(STR."User not found with username: \{request.getUsername()}"));
         String token = jwtService.generateToken(user);
-        return new AuthenticationResponse(token);
+        return new AuthenticationResponse(
+                token,
+                user.getId(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getUsername(),
+                user.getRole().toString()
+        );
     }
 }

@@ -1,5 +1,6 @@
 package backend.inventory_app.Service;
 
+import backend.inventory_app.Model.Role;
 import backend.inventory_app.Model.User;
 import backend.inventory_app.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +50,27 @@ public class UserService implements UserDetailsService {
         Optional<User> userOpt = userRepository.findById(id);
         if(userOpt.isPresent())   {
             User userVar = userOpt.get();
-            userVar.setFirstname(user.getFirstname());
-            userVar.setLastname(user.getLastname());
+
+            if(user.getFirstname() != null) {
+                userVar.setFirstname(user.getFirstname());
+            }
+
+            if(user.getLastname() != null) {
+                userVar.setLastname(user.getLastname());
+            }
+
+            if(user.getUsername() != null) {
+                userVar.setUsername(user.getUsername());
+            }
+
+            if(user.getRole() != null) {
+                try{
+                    userVar.setRole(Role.valueOf(String.valueOf(user.getRole()).toUpperCase()));
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException(STR."Invalid role: \{user.getRole()}");
+                }
+            }
+
             return userRepository.save(userVar);
         } else {
             throw new IllegalArgumentException(STR."User was not found with id: \{id}");
